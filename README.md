@@ -1,2 +1,3 @@
-# meerkat
-Automated cross browser image comparison
+# Meerkat
+
+Automated cross browser image comparison.
