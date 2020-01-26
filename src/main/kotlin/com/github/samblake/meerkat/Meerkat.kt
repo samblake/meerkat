@@ -1,9 +1,9 @@
 package com.github.samblake.meerkat
 
+import com.github.samblake.meerkat.edge.Configuration
 import com.github.samblake.meerkat.edge.Database
-import com.github.samblake.meerkat.edge.Database.query
-import com.github.samblake.meerkat.model.Project
-import com.github.samblake.meerkat.model.ProjectDto
+import com.github.samblake.meerkat.services.BrowserService
+import com.github.samblake.meerkat.services.ProjectService
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -11,19 +11,21 @@ import io.ktor.features.Compression
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DefaultHeaders
 import io.ktor.gson.gson
-import io.ktor.http.ContentType
-import io.ktor.http.content.default
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.response.respond
-import io.ktor.response.respondText
 import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
-import java.text.DateFormat
+import io.ktor.thymeleaf.Thymeleaf
+import io.ktor.thymeleaf.ThymeleafContent
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import java.text.DateFormat.LONG
 
 fun main() {
+
+    val staticDir = Configuration.static()
 
     Database.init()
 
@@ -32,33 +34,40 @@ fun main() {
         install(DefaultHeaders)
         install(Compression)
         install(CallLogging)
+
         install(ContentNegotiation) {
             gson {
-                setDateFormat(DateFormat.LONG)
+                setDateFormat(LONG)
                 setPrettyPrinting()
             }
         }
 
+        install(Thymeleaf) {
+            setTemplateResolver(ClassLoaderTemplateResolver().apply {
+                prefix = "templates/"
+                suffix = ".html"
+                characterEncoding = "utf-8"
+            })
+        }
+
         routing {
             static("css") {
-                files("static/css")
+                files("${staticDir}/css")
             }
             static("js") {
-                files("static/js")
-            }
-            static("home") {
-                default("static/index.html")
+                files("${staticDir}/js")
             }
 
             get("/") {
-                call.respondText("Hello World!", ContentType.Text.Plain)
+                call.respond(ThymeleafContent("index", mapOf()))
             }
             get("/projects") {
-                val projects = query {
-                    Project.all().toList().map { p -> ProjectDto.from(p) }
-                }
-                call.respond( projects )
+                call.respond( ProjectService.all() )
             }
+            get("/browsers") {
+                call.respond( BrowserService.all() )
+            }
+
         }
 
     }.start(wait = true)

@@ -1,2 +1,2 @@
-CREATE SCHEMA IF NOT EXISTS meerkat;
-SET SCHEMA meerkat;
+CREATE DATABASE IF NOT EXISTS meerkat;
+USE meerkat;
