@@ -5,3 +5,6 @@ ENTRYPOINT ["/usr/bin/java", "-jar", "/opt/meerkat/meerkat.jar"]
 
 ARG JAR_FILE
 ADD target/meerkat-app.jar /opt/meerkat/meerkat.jar
+
+ADD ./static /static
+ADD ./sql /sql

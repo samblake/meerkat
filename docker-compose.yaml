@@ -1,6 +1,32 @@
 version: '3'
 services:
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./sql/init-mysql.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/2.sql
+      - ./sql/example.sql:/docker-entrypoint-initdb.d/3.sql
+    restart: always
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    environment:
+      MYSQL_ROOT_PASSWORD: meerkat
+      MYSQL_DATABASE: meerkat
+      MYSQL_USER: meerkat
+      MYSQL_PASSWORD: meerkat
+    ports:
+      - 3306:3306
+
   web:
     build: .
+    environment:
+      MEERKAT_JDBC_DRIVER: com.mysql.cj.jdbc.Driver
+      MEERKAT_JDBC_URL: jdbc:mysql://meerkat:meerkat@localhost:3306/meerkat?useUnicode=true&characterEncoding=utf8
     ports:
-      - "7000:7000"
+      - "7070:7000"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
