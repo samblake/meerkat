@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" class="has-aside-left has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded"
+      xmlns:th="https://www.thymeleaf.org/th" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meerkat</title>
+    <link rel="stylesheet" href="css/meerkat.css">
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<div id="app">
+
+    <nav th:replace="fragments/header"></nav>
+
+    <aside th:replace="fragments/aside"></aside>
+
+    <aside th:replace="fragments/titleBar"></aside>
+
+    <aside th:replace="fragments/heroBar"></aside>
+
+    <section layout:fragment="content"></section>
+
+    <aside th:replace="fragments/footer"></aside>
+
+</div>
+
+<aside th:replace="fragments/modal"></aside>
+
+<!-- Stuff below is for demo-only -->
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script type="text/javascript" src="js/chart.sample.js"></script>
+<link rel="stylesheet" href="https://cdn.materialdesignicons.com/4.4.95/css/materialdesignicons.min.css">
+</body>
+</html>

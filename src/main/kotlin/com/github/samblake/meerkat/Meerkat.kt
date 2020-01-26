@@ -20,6 +20,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.thymeleaf.Thymeleaf
 import io.ktor.thymeleaf.ThymeleafContent
+import nz.net.ultraq.thymeleaf.LayoutDialect
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.text.DateFormat.LONG
 
@@ -47,6 +48,7 @@ fun main() {
                 prefix = "templates/"
                 suffix = ".html"
                 characterEncoding = "utf-8"
+                addDialect(LayoutDialect())
             })
         }
 
