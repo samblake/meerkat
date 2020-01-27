@@ -1,0 +1,57 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<section class="section is-main-section" layout:fragment="content">
+
+    <div class="card-content">
+        <div class="table-container">
+            <table class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">
+                            <label class="b-checkbox checkbox">
+                                <input type="checkbox" value="false">
+                                <span class="check"></span>
+                                <span class="control-label"></span>
+                            </label>
+                        </th>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td class="checkbox-cell">
+                            <label class="b-checkbox checkbox">
+                                <input type="checkbox" value="false">
+                                <span class="check"></span>
+                                <span class="control-label"></span>
+                            </label>
+                        </td>
+                        <td class="is-image-cell">
+                            <div class="image">
+                                <img src="https://avatars.dicebear.com/v2/initials/juliet-muller.svg" class="is-rounded">
+                            </div>
+                        </td>
+                        <td>Juliet Muller</td>
+                        <td>Carroll Inc</td>
+                        <td>
+                            <div class="buttons is-right">
+                                <button class="button is-small is-primary" type="button">
+                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                </button>
+                                <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
+                                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>

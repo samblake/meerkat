@@ -1,10 +1,9 @@
-<section class="section is-title-bar">
+<section class="section is-title-bar" xmlns:th="https://www.thymeleaf.org/th">
     <div class="level">
         <div class="level-left">
             <div class="level-item">
                 <ul>
-                    <li>Meerkat</li>
-                    <li>Dashboard</li>
+                    <li th:each="crumb: ${crumbs}" th:text="${crumb}" />
                 </ul>
             </div>
         </div>
