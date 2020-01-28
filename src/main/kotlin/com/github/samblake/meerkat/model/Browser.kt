@@ -11,7 +11,7 @@ object Browsers : NamedTable("browsers") {
     val additionalConfig = text("additional_config").nullable()
 }
 
-class Browser(id: EntityID<Int>) : NamedEntity(id) {
+class Browser(id: EntityID<Int>) : NamedEntity<BrowserDto>(id) {
     companion object : NamedEntityClass<Browser>(Browsers)
 
     override var name by Browsers.name
@@ -21,6 +21,9 @@ class Browser(id: EntityID<Int>) : NamedEntity(id) {
     val width by Browsers.width
     val height by Browsers.height
     val additionalConfig by Browsers.additionalConfig
+
+    override fun toDto() = BrowserDto.from(this)
+
 }
 
 data class BrowserDto(val id: Int, val name: String, val description: String,

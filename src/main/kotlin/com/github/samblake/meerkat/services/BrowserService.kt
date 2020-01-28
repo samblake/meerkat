@@ -7,7 +7,7 @@ import com.github.samblake.meerkat.model.BrowserDto
 object BrowserService {
 
     suspend fun all(): List<BrowserDto> = query {
-        Browser.all().toList().map { b -> BrowserDto.from(b) }
+        Browser.all().toList().map { it.toDto() }
     }
 
 }

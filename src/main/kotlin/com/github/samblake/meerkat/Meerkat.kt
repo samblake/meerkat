@@ -5,9 +5,7 @@ import com.github.samblake.meerkat.crumbs.crumb
 import com.github.samblake.meerkat.edge.Configuration
 import com.github.samblake.meerkat.edge.Database
 import com.github.samblake.meerkat.model.Browser
-import com.github.samblake.meerkat.model.BrowserDto
 import com.github.samblake.meerkat.model.Project
-import com.github.samblake.meerkat.model.ProjectDto
 import com.github.samblake.meerkat.services.BrowserService
 import com.github.samblake.meerkat.services.ProjectService
 import io.ktor.application.ApplicationCall
@@ -76,7 +74,9 @@ fun main() {
             route("/") {
                 crumb("Meerkat") {
                     get {
-                        call.respond(ThymeleafContent("index", mapOf()))
+                        call.respond(ThymeleafContent("index", mapOf(
+                            "menu" to generateMenu()
+                        )))
                     }
 
                     route("projects") {
@@ -86,10 +86,11 @@ fun main() {
                                 when (call.request.contentType()) {
                                     ContentType.Application.Json -> call.respond(projects)
                                     else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                                        attrTo(Crumb.title),
+                                        attrTo(Crumb.crumbs),
                                         "projects" to projects,
-                                        "crumbs" to attr(Crumb.crumbs),
-                                        "title" to attr(Crumb.title),
-                                        "url" to call.request.uri
+                                        "url" to call.request.uri,
+                                        "menu" to generateMenu()
                                     )))
                                 }
                             }
@@ -97,14 +98,15 @@ fun main() {
                             route("{id}") {
                                 crumb(Project) {
                                     get {
-                                        val project = ProjectDto.from(attr(Crumb.entity) as Project)
+                                        val project = attr(Crumb.entity).toDto()
                                         when (call.request.contentType()) {
                                             ContentType.Application.Json -> call.respond(project)
                                             else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                                attrTo(Crumb.title),
+                                                attrTo(Crumb.crumbs),
                                                 "project" to project,
-                                                "crumbs" to attr(Crumb.crumbs),
-                                                "title" to attr(Crumb.title),
-                                                "url" to call.request.uri
+                                                "url" to call.request.uri,
+                                                "menu" to generateMenu()
                                             )))
                                         }
                                     }
@@ -120,10 +122,11 @@ fun main() {
                                 when (call.request.contentType()) {
                                     ContentType.Application.Json -> call.respond(browsers)
                                     else -> call.respond(ThymeleafContent("browsers/list", mapOf(
+                                        attrTo(Crumb.title),
+                                        attrTo(Crumb.crumbs),
                                         "browsers" to browsers,
-                                        "crumbs" to attr(Crumb.crumbs),
-                                        "title" to attr(Crumb.title),
-                                        "url" to call.request.uri
+                                        "url" to call.request.uri,
+                                        "menu" to generateMenu()
                                     )))
                                 }
                             }
@@ -131,14 +134,15 @@ fun main() {
                             route("{id}") {
                                 crumb(Browser) {
                                     get {
-                                        val browser = BrowserDto.from(attr(Crumb.entity) as Browser)
+                                        val browser = attr(Crumb.entity).toDto()
                                         when (call.request.contentType()) {
                                             ContentType.Application.Json -> call.respond(browser)
                                             else -> call.respond(ThymeleafContent("browsers/view", mapOf(
+                                                attrTo(Crumb.title),
+                                                attrTo(Crumb.crumbs),
                                                 "browser" to browser,
-                                                "crumbs" to attr(Crumb.crumbs),
-                                                "title" to attr(Crumb.title),
-                                                "url" to call.request.uri
+                                                "url" to call.request.uri,
+                                                "menu" to generateMenu()
                                             )))
                                         }
                                     }
@@ -154,6 +158,24 @@ fun main() {
 
 }
 
+data class Link(val name: String, val href: String)
+val menu = listOf(
+    Link("Projects", "/projects"),
+    Link("Browsers", "/browsers")
+)
+
+data class MenuLink(val link: Link, val selected: Boolean)
+
+private fun PipelineContext<Unit, ApplicationCall>.generateMenu(): List<MenuLink> {
+    val crumbs = attr(Crumb.crumbs)
+    return menu.map { link ->
+        val matching = crumbs.filter { crumb -> crumb == link.name }
+        MenuLink(link, matching.isNotEmpty())
+    }
+}
+
 private fun <T:Any>PipelineContext<Unit, ApplicationCall>.attr(key: AttributeKey<T>): T =
     context.request.call.attributes.get(key)
 
+private fun <T:Any>PipelineContext<Unit, ApplicationCall>.attrTo(key: AttributeKey<T>): Pair<String, T> =
+    key.name to attr(key)

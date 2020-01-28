@@ -1,4 +1,4 @@
-<aside class="aside is-placed-left is-expanded">
+<aside class="aside is-placed-left is-expanded" xmlns:th="https://www.thymeleaf.org/th">
     <div class="aside-tools">
         <div class="aside-tools-label">
             <span><b>Meerkat</b></span>
@@ -10,22 +10,24 @@
             <li>
                 <a href="/" class="is-active router-link-active has-icon">
                     <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
-                    <span class="menu-item-label">Dashboard</span>
+                    <span class="menu-item-label">Home</span>
                 </a>
             </li>
         </ul>
-        <p class="menu-label">Examples</p>
+        <p class="menu-label">Projects</p>
         <ul class="menu-list">
-            <li>
-                <a href="/tables.html" class="has-icon">
-                    <span class="icon has-update-mark"><i class="mdi mdi-table"></i></span>
-                    <span class="menu-item-label">Tables</span>
+            <li th:each="item: ${menu}">
+                <a th:href="${item.link.href}" class="has-icon" th:classappend="${item.selected} ? is-active : ''">
+                    <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
+                    <span class="menu-item-label" th:text="${item.link.name}"/>
                 </a>
             </li>
+
+            <!--
             <li>
-                <a href="/forms.html" class="has-icon">
+                <a href="/browsers" class="has-icon">
                     <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
-                    <span class="menu-item-label">Forms</span>
+                    <span class="menu-item-label">Browsers</span>
                 </a>
             </li>
             <li>
@@ -70,6 +72,7 @@
                     <span class="menu-item-label">About</span>
                 </a>
             </li>
+            -->
         </ul>
     </div>
 </aside>

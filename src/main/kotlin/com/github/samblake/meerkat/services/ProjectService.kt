@@ -7,7 +7,7 @@ import com.github.samblake.meerkat.model.ProjectDto
 object ProjectService {
 
     suspend fun all(): List<ProjectDto> = Database.query {
-        Project.all().toList().map { b -> ProjectDto.from(b) }
+        Project.all().toList().map { it.toDto() }
     }
 
 }

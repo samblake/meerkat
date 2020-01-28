@@ -18,7 +18,7 @@ import io.ktor.util.pipeline.PipelineContext
 object Crumb {
     val crumbs = AttributeKey<MutableList<String>>("crumbs")
     val title = AttributeKey<String>("title")
-    val entity = AttributeKey<NamedEntity>("entity")
+    val entity = AttributeKey<NamedEntity<out Any>>("entity")
 }
 
 @ContextDsl
@@ -39,7 +39,7 @@ fun Route.crumb(name: String, callback: Route.() -> Unit): Route {
     return routeWithCrumb
 }
 
-fun <T:NamedEntity>Route.crumb(entityClass: NamedEntityClass<T>, callback: Route.() -> Unit): Route {
+fun <T:NamedEntity<out Any>>Route.crumb(entityClass: NamedEntityClass<T>, callback: Route.() -> Unit): Route {
 
     val routeWithCrumb = this.createChild(object : RouteSelector(1.0) {
         override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation = Constant
