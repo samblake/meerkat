@@ -1,0 +1,40 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorate="~{layout}">
+<section class="section is-main-section" layout:fragment="content">
+    <div class="tile is-ancestor">
+        <div class="tile is-parent">
+            <div class="card tile is-child">
+                <header class="card-header">
+                    <p class="card-header-title">
+                        <span class="icon"><i class="mdi mdi-account default"></i></span>
+                        <span th:text="${browser.name}"></span>
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="has-max-width is-aligned-center" th:text="${browser.description}"/>
+                    <hr>
+                    <div class="field">
+                        <label class="label">Client</label>
+                        <div class="control is-clearfix">
+                            <input type="text" readonly class="input is-static" th:text="${browser.client}">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">Width</label>
+                        <div class="control is-clearfix">
+                            <input type="text" readonly class="input is-static" th:text="${browser.width}">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="field">
+                        <label class="label">Height</label>
+                        <div class="control is-clearfix">
+                            <input type="text" readonly class="input is-static" th:text="${browser.height}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>

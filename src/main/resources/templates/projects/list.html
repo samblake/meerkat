@@ -1,4 +1,5 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}">
 <section class="section is-main-section" layout:fragment="content">
 
     <div class="card-content">
@@ -22,7 +23,7 @@
 
                 <tbody>
 
-                    <tr>
+                    <tr th:each="project: ${projects}">
                         <td class="checkbox-cell">
                             <label class="b-checkbox checkbox">
                                 <input type="checkbox" value="false">
@@ -30,18 +31,16 @@
                                 <span class="control-label"></span>
                             </label>
                         </td>
-                        <td class="is-image-cell">
-                            <div class="image">
-                                <img src="https://avatars.dicebear.com/v2/initials/juliet-muller.svg" class="is-rounded">
-                            </div>
-                        </td>
-                        <td>Juliet Muller</td>
-                        <td>Carroll Inc</td>
+                        <td></td>
+                        <td th:text="${project.name}" />
+                        <td th:text="${project.description}" />
                         <td>
                             <div class="buttons is-right">
-                                <button class="button is-small is-primary" type="button">
-                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                </button>
+                                <a th:href="${url + '/' + project.id}">
+                                    <button class="button is-small is-primary" type="button">
+                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                    </button>
+                                </a>
                                 <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
                                     <span class="icon"><i class="mdi mdi-trash-can"></i></span>
                                 </button>

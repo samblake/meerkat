@@ -1,19 +1,17 @@
 package com.github.samblake.meerkat.model
 
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.IntIdTable
 
-object Projects : IntIdTable("projects") {
-    val name = com.github.samblake.meerkat.model.Projects.varchar("name", length = 100)
-    val description = com.github.samblake.meerkat.model.Projects.varchar("description", length = 500)
+object Projects : NamedTable("projects") {
+    val name = varchar("name", length = 100)
+    val description = varchar("description", length = 500)
 }
 
-class Project(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Project>(Projects)
+class Project(id: EntityID<Int>) : NamedEntity(id) {
+    companion object : NamedEntityClass<Project>(Projects)
 
-    var name by Projects.name
+    override var name by Projects.name
+
     var description by Projects.description
 }
 

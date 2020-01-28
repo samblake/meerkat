@@ -1,4 +1,5 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+      layout:decorate="~{layout}">
 <section class="section is-main-section" layout:fragment="content">
 
     <div class="card-content">
@@ -25,7 +26,7 @@
 
                 <tbody>
 
-                    <tr>
+                    <tr th:each="browser: ${browsers}">
                         <td class="checkbox-cell">
                             <label class="b-checkbox checkbox">
                                 <input type="checkbox" value="false">
@@ -33,25 +34,19 @@
                                 <span class="control-label"></span>
                             </label>
                         </td>
-                        <td class="is-image-cell">
-                            <div class="image">
-                                <img src="https://avatars.dicebear.com/v2/initials/juliet-muller.svg" class="is-rounded">
-                            </div>
-                        </td>
-                        <td>Juliet Muller</td>
-                        <td>Carroll Inc</td>
-                        <td>Lake Norberto</td>
-                        <td class="is-progress-col">
-                            <progress max="100" class="progress is-small is-primary" value="79">79</progress>
-                        </td>
-                        <td>
-                            <small class="has-text-grey is-abbr-like" title="Jun 1, 2019">Jun 1, 2019</small>
-                        </td>
+                        <td></td>
+                        <td th:text="${browser.name}" />
+                        <td th:text="${browser.description}" />
+                        <td th:text="${browser.client}" />
+                        <td th:text="${browser.width}" />
+                        <td th:text="${browser.height}" />
                         <td>
                             <div class="buttons is-right">
-                                <button class="button is-small is-primary" type="button">
-                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                </button>
+                                <a th:href="${url + '/' + browser.id}">
+                                    <button class="button is-small is-primary" type="button">
+                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
+                                    </button>
+                                </a>
                                 <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
                                     <span class="icon"><i class="mdi mdi-trash-can"></i></span>
                                 </button>

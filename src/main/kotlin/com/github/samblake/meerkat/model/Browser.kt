@@ -1,11 +1,8 @@
 package com.github.samblake.meerkat.model
 
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.IntIdTable
 
-object Browsers : IntIdTable("browsers") {
+object Browsers : NamedTable("browsers") {
     val name = varchar("name", length = 100)
     val description = text("description")
     val client = enumerationByName("client", 10, Clients::class)
@@ -14,10 +11,11 @@ object Browsers : IntIdTable("browsers") {
     val additionalConfig = text("additional_config").nullable()
 }
 
-class Browser(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<Browser>(Browsers)
+class Browser(id: EntityID<Int>) : NamedEntity(id) {
+    companion object : NamedEntityClass<Browser>(Browsers)
 
-    var name by Browsers.name
+    override var name by Browsers.name
+
     var description by Browsers.description
     val client by Browsers.client
     val width by Browsers.width

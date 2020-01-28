@@ -1,10 +1,16 @@
 package com.github.samblake.meerkat
 
+import com.github.samblake.meerkat.crumbs.Crumb
+import com.github.samblake.meerkat.crumbs.crumb
 import com.github.samblake.meerkat.edge.Configuration
 import com.github.samblake.meerkat.edge.Database
+import com.github.samblake.meerkat.model.Browser
+import com.github.samblake.meerkat.model.BrowserDto
+import com.github.samblake.meerkat.model.Project
+import com.github.samblake.meerkat.model.ProjectDto
 import com.github.samblake.meerkat.services.BrowserService
 import com.github.samblake.meerkat.services.ProjectService
-import io.ktor.application.ApplicationCallPipeline
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.CallLogging
@@ -16,43 +22,20 @@ import io.ktor.http.ContentType
 import io.ktor.http.content.files
 import io.ktor.http.content.static
 import io.ktor.request.contentType
+import io.ktor.request.uri
 import io.ktor.response.respond
-import io.ktor.routing.*
+import io.ktor.routing.get
+import io.ktor.routing.route
+import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.thymeleaf.Thymeleaf
 import io.ktor.thymeleaf.ThymeleafContent
 import io.ktor.util.AttributeKey
+import io.ktor.util.pipeline.PipelineContext
 import nz.net.ultraq.thymeleaf.LayoutDialect
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import java.text.DateFormat.LONG
-
-val crumbKey = AttributeKey<MutableList<String>>("crumbs")
-val titleKey = AttributeKey<String>("title")
-
-fun Route.withCrumb(name: String, callback: Route.() -> Unit): Route {
-
-    val routeWithCrumb = this.createChild(object : RouteSelector(1.0) {
-        override fun evaluate(context: RoutingResolveContext, segmentIndex: Int): RouteSelectorEvaluation =
-            RouteSelectorEvaluation.Constant
-    })
-
-    // Intercepts calls from this route at the features step
-    routeWithCrumb.intercept(ApplicationCallPipeline.Features) {
-        var att = context.request.call.attributes.getOrNull(crumbKey)
-        if (att == null) {
-            att = ArrayList()
-        }
-        att.add(name)
-        context.request.call.attributes.put(crumbKey, att)
-        context.request.call.attributes.put(titleKey, name)
-    }
-
-    // Configure this route with the block provided by the user
-    callback(routeWithCrumb)
-
-    return routeWithCrumb
-}
 
 fun main() {
 
@@ -91,43 +74,73 @@ fun main() {
             }
 
             route("/") {
-                withCrumb("Meerkat") {
+                crumb("Meerkat") {
                     get {
                         call.respond(ThymeleafContent("index", mapOf()))
                     }
+
                     route("projects") {
-                        withCrumb("Projects") {
+                        crumb("Projects") {
                             get {
                                 val projects = ProjectService.all()
                                 when (call.request.contentType()) {
                                     ContentType.Application.Json -> call.respond(projects)
-                                    else -> {
-                                        val crumbs = context.request.call.attributes.get(crumbKey)
-                                        val title = context.request.call.attributes.get(titleKey)
-                                        call.respond(ThymeleafContent("projects/list", mapOf(
-                                            "projects" to projects,
-                                            "crumbs" to crumbs,
-                                            "title" to title
-                                        )))
+                                    else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                                        "projects" to projects,
+                                        "crumbs" to attr(Crumb.crumbs),
+                                        "title" to attr(Crumb.title),
+                                        "url" to call.request.uri
+                                    )))
+                                }
+                            }
+
+                            route("{id}") {
+                                crumb(Project) {
+                                    get {
+                                        val project = ProjectDto.from(attr(Crumb.entity) as Project)
+                                        when (call.request.contentType()) {
+                                            ContentType.Application.Json -> call.respond(project)
+                                            else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                                "project" to project,
+                                                "crumbs" to attr(Crumb.crumbs),
+                                                "title" to attr(Crumb.title),
+                                                "url" to call.request.uri
+                                            )))
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
                     route("browsers") {
-                        withCrumb("Browsers") {
+                        crumb("Browsers") {
                             get {
                                 val browsers = BrowserService.all()
                                 when (call.request.contentType()) {
                                     ContentType.Application.Json -> call.respond(browsers)
-                                    else -> {
-                                        val crumbs = context.request.call.attributes.get(crumbKey)
-                                        call.respond(
-                                            ThymeleafContent(
-                                                "browser/list",
-                                                mapOf("browsers" to browsers, "crumbs" to crumbs)
-                                            )
-                                        )
+                                    else -> call.respond(ThymeleafContent("browsers/list", mapOf(
+                                        "browsers" to browsers,
+                                        "crumbs" to attr(Crumb.crumbs),
+                                        "title" to attr(Crumb.title),
+                                        "url" to call.request.uri
+                                    )))
+                                }
+                            }
+
+                            route("{id}") {
+                                crumb(Browser) {
+                                    get {
+                                        val browser = BrowserDto.from(attr(Crumb.entity) as Browser)
+                                        when (call.request.contentType()) {
+                                            ContentType.Application.Json -> call.respond(browser)
+                                            else -> call.respond(ThymeleafContent("browsers/view", mapOf(
+                                                "browser" to browser,
+                                                "crumbs" to attr(Crumb.crumbs),
+                                                "title" to attr(Crumb.title),
+                                                "url" to call.request.uri
+                                            )))
+                                        }
                                     }
                                 }
                             }
@@ -139,6 +152,8 @@ fun main() {
 
     }.start(wait = true)
 
-
-
 }
+
+private fun <T:Any>PipelineContext<Unit, ApplicationCall>.attr(key: AttributeKey<T>): T =
+    context.request.call.attributes.get(key)
+
