@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" class="has-aside-left has-aside-mobile-transition has-navbar-fixed-top has-aside-expanded"
+<html lang="en" class="has-aside-left has-aside-mobile-transition has-aside-expanded"
       xmlns:th="https://www.thymeleaf.org/th" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Meerkat</title>
+    <title th:text="'Meerkat' + (${title} ? ' - ' + ${title} : '')" />
     <link rel="stylesheet" href="/css/meerkat.css">
 
     <!-- Fonts -->
@@ -16,17 +16,17 @@
 <body>
 <div id="app">
 
-    <nav th:replace="fragments/header"></nav>
+    <!--<nav th:replace="fragments/header"/>-->
 
-    <aside th:replace="fragments/aside"></aside>
+    <aside th:replace="fragments/aside"/>
 
-    <aside th:replace="fragments/titleBar"></aside>
+    <section th:replace="fragments/titleBar"/>
 
-    <aside th:replace="fragments/heroBar"></aside>
+    <!--<section th:replace="fragments/heroBar"/>-->
 
-    <section layout:fragment="content"></section>
+    <section layout:fragment="content"/>
 
-    <aside th:replace="fragments/footer"></aside>
+    <footer th:replace="fragments/footer"/>
 
 </div>
 

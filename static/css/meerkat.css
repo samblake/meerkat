@@ -7763,6 +7763,7 @@ aside.aside {
     left: 0; } }
 
 section.section.is-title-bar {
+  background-color: white;
   padding: 1.5rem;
   border-bottom: 1px solid rgba(24, 28, 33, 0.06); }
   section.section.is-title-bar ul li {
