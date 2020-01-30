@@ -5,23 +5,17 @@
         </div>
     </div>
     <div class="menu is-menu-main">
-        <p class="menu-label">General</p>
-        <ul class="menu-list">
-            <li>
-                <a href="/" class="is-active router-link-active has-icon">
-                    <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
-                    <span class="menu-item-label">Home</span>
-                </a>
-            </li>
-        </ul>
-        <p class="menu-label">Projects</p>
-        <ul class="menu-list">
-            <li th:each="item: ${menu}">
-                <a th:href="${item.link.href}" class="has-icon" th:classappend="${item.selected} ? is-active : ''">
-                    <span class="icon"><i class="mdi mdi-square-edit-outline"></i></span>
-                    <span class="menu-item-label" th:text="${item.link.name}"/>
-                </a>
-            </li>
+        <div th:each="section: ${menu.sections}">
+            <p class="menu-label" th:text="${section.name}" />
+            <ul class="menu-list" th:each="item: ${section.items}">
+                <li>
+                    <a th:href="${item.url}" class="has-icon" th:classappend="${menu.isSelected(item)} ? is-active : ''">
+                        <span class="icon"><i class="mdi" th:classappend="${item.icon}"></i></span>
+                        <span class="menu-item-label" th:text="${item.name}">Home</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
             <!--
             <li>
@@ -73,6 +67,6 @@
                 </a>
             </li>
             -->
-        </ul>
+
     </div>
 </aside>

@@ -11,8 +11,8 @@ object Browsers : NamedTable("browsers") {
     val additionalConfig = text("additional_config").nullable()
 }
 
-class Browser(id: EntityID<Int>) : NamedEntity<BrowserDto>(id) {
-    companion object : NamedEntityClass<Browser>(Browsers)
+class Browser(id: EntityID<Int>) : NamedEntity<ViewBrowser>(id) {
+    companion object : NamedEntityClass<Browser>("Browsers", "browsers", Browsers)
 
     override var name by Browsers.name
 
@@ -22,23 +22,24 @@ class Browser(id: EntityID<Int>) : NamedEntity<BrowserDto>(id) {
     val height by Browsers.height
     val additionalConfig by Browsers.additionalConfig
 
-    override fun toDto() = BrowserDto.from(this)
+    override fun asViewModel(baseUrl: String) = ViewBrowser.from(this, baseUrl)
 
 }
 
-data class BrowserDto(val id: Int, val name: String, val description: String,
-    val client: Clients, val width: Int, val height: Int, val additionalConfig: String?) {
+class ViewBrowser(id: Int, name: String, description: String, val client: Clients, val width: Int, val height: Int,
+        val additionalConfig: String?, override val baseUrl: String) : ViewModel(id, name, description) {
 
     companion object {
-        fun from(browser: Browser): BrowserDto {
-            return BrowserDto(
+        fun from(browser: Browser, baseUrl: String): ViewBrowser {
+            return ViewBrowser(
                 browser.id.value,
                 browser.name,
                 browser.description,
                 browser.client,
                 browser.width,
                 browser.height,
-                browser.additionalConfig
+                browser.additionalConfig,
+                baseUrl
             )
         }
     }

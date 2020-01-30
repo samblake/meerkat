@@ -7,25 +7,27 @@ object Projects : NamedTable("projects") {
     val description = varchar("description", length = 500)
 }
 
-class Project(id: EntityID<Int>) : NamedEntity<ProjectDto>(id) {
-    companion object : NamedEntityClass<Project>(Projects)
+class Project(id: EntityID<Int>) : NamedEntity<ViewProject>(id) {
+    companion object : NamedEntityClass<Project>("Projects","projects", Projects)
 
     override var name by Projects.name
 
     var description by Projects.description
 
-    override fun toDto() = ProjectDto.from(this)
+    override fun asViewModel(baseUrl: String) = ViewProject.from(this, baseUrl)
 
 }
 
-data class ProjectDto(val id: Int, val name: String, val description: String) {
+class ViewProject(id: Int, name: String, description: String,
+        override val baseUrl: String) : ViewModel(id, name, description) {
 
     companion object {
-        fun from(project: Project): ProjectDto {
-            return ProjectDto(
+        fun from(project: Project, baseUrl: String): ViewProject {
+            return ViewProject(
                 project.id.value,
                 project.name,
-                project.description
+                project.description,
+                baseUrl
             )
         }
     }

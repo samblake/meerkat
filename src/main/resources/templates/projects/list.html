@@ -36,7 +36,7 @@
                         <td th:text="${project.description}" />
                         <td>
                             <div class="buttons is-right">
-                                <a th:href="${url + '/' + project.id}">
+                                <a th:href="${project.instanceUrl}">
                                     <button class="button is-small is-primary" type="button">
                                         <span class="icon"><i class="mdi mdi-eye"></i></span>
                                     </button>
