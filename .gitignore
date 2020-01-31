@@ -26,3 +26,7 @@ hs_err_pid*
 # Intellij
 .idea/
 *.iml
+
+
+# CSS
+/static/css
