@@ -7,12 +7,12 @@ object Browsers : NamedTable("browsers") {
     val description = text("description")
     val client = enumerationByName("client", 10, Clients::class)
     val width = integer("width")
-    val height = integer("width")
+    val height = integer("height")
     val additionalConfig = text("additional_config").nullable()
 }
 
 class Browser(id: EntityID<Int>) : NamedEntity<ViewBrowser>(id) {
-    companion object : NamedEntityClass<Browser>("Browsers", "browsers", Browsers)
+    companion object : NamedEntityClass<Browser>(Browsers)
 
     override var name by Browsers.name
 
@@ -29,7 +29,8 @@ class Browser(id: EntityID<Int>) : NamedEntity<ViewBrowser>(id) {
 class ViewBrowser(id: Int, name: String, description: String, val client: Clients, val width: Int, val height: Int,
         val additionalConfig: String?, override val baseUrl: String) : ViewModel(id, name, description) {
 
-    companion object {
+    companion object : ViewType<ViewBrowser>("Browsers", "browsers", "mdi-cellphone-link")  {
+
         fun from(browser: Browser, baseUrl: String): ViewBrowser {
             return ViewBrowser(
                 browser.id.value,
@@ -42,7 +43,10 @@ class ViewBrowser(id: Int, name: String, description: String, val client: Client
                 baseUrl
             )
         }
+
     }
+
+    override val icon = ViewBrowser.icon
 
 }
 

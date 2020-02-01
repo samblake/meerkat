@@ -1,6 +1,6 @@
 package com.github.samblake.meerkat.menu
 
-import com.github.samblake.meerkat.model.NamedEntityClass
+import com.github.samblake.meerkat.model.ViewType
 
 class Menu(val sections: List<Section>) {
 
@@ -19,10 +19,10 @@ class Section(val name: String, val items: List<Item>) {
 
 class Item(val name: String, val url: String, val icon: String) {
 
-    constructor(namedEntityClass: NamedEntityClass<*>, icon: String) : this(namedEntityClass, "/", icon)
+    constructor(viewType: ViewType<*>) : this(viewType, "/")
 
-    constructor(namedEntityClass: NamedEntityClass<*>, baseUrl: String, icon: String)
-            : this(namedEntityClass.name, baseUrl + namedEntityClass.urlSegment, icon)
+    constructor(viewType: ViewType<*>, baseUrl: String)
+            : this(viewType.name, baseUrl + viewType.urlSegment, viewType.icon)
 
     fun isSelected(crumbs: List<String>): Boolean = crumbs.any { it == name }
 

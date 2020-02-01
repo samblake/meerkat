@@ -12,5 +12,4 @@ abstract class NamedEntity<T:Any>(id: EntityID<Int>) : IntEntity(id) {
 
 abstract class NamedTable(name: String = "", columnName: String = "id") : IntIdTable(name, columnName)
 
-abstract class NamedEntityClass<out E:NamedEntity<out Any>>(val name: String, val urlSegment: String,
-        table: IdTable<Int>, entityType: Class<E>? = null) : IntEntityClass<E>(table, entityType)
+abstract class NamedEntityClass<out E:NamedEntity<out Any>>(table: IdTable<Int>, entityType: Class<E>? = null) : IntEntityClass<E>(table, entityType)

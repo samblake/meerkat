@@ -10,6 +10,8 @@ import com.github.samblake.meerkat.menu.Section
 import com.github.samblake.meerkat.menu.ViewMenu
 import com.github.samblake.meerkat.model.Browser
 import com.github.samblake.meerkat.model.Project
+import com.github.samblake.meerkat.model.ViewBrowser
+import com.github.samblake.meerkat.model.ViewProject
 import com.github.samblake.meerkat.services.BrowserService
 import com.github.samblake.meerkat.services.ProjectService
 import io.ktor.application.ApplicationCall
@@ -75,102 +77,80 @@ fun main() {
                 files("${staticDir}/js")
             }
 
-            route("") {
-                crumb("Meerkat") {
-                    get {
-                        call.respond(ThymeleafContent("index", mapOf(
-                            attrTo(Crumb.title),
-                            attrTo(Crumb.crumbs),
-                            "menu" to generateMenu()
-                        )))
-                    }
-
-                    with (Project) {
-                        route(urlSegment) {
-                            crumb(name) {
-                                get {
-                                    val url = call.request.uri;
-                                    val projects = ProjectService.all(url)
-                                    when (call.request.contentType()) {
-                                        ContentType.Application.Json -> call.respond(projects)
-                                        else -> call.respond(ThymeleafContent("projects/list", mapOf(
-                                            attrTo(Crumb.title),
-                                            attrTo(Crumb.crumbs),
-                                            "projects" to projects,
-                                            "url" to call.request.uri,
-                                            "menu" to generateMenu()
-                                        )))
-                                    }
-                                }
-
-                                route("{id}") {
-                                    crumb(Project) {
-                                        get {
-                                            val url = call.request.uri;
-                                            val project = attr(Crumb.entity).asViewModel(url)
-                                            when (call.request.contentType()) {
-                                                ContentType.Application.Json -> call.respond(project)
-                                                else -> call.respond(ThymeleafContent("projects/view", mapOf(
-                                                    attrTo(Crumb.title),
-                                                    attrTo(Crumb.crumbs),
-                                                    "project" to project,
-                                                    "menu" to generateMenu()
-                                                )))
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    with (Browser) {
-                        route(urlSegment) {
-                            crumb(name) {
-                                get {
-                                    val url = call.request.uri;
-                                    val browsers = BrowserService.all(url)
-                                    when (call.request.contentType()) {
-                                        ContentType.Application.Json -> call.respond(browsers)
-                                        else -> call.respond(
-                                            ThymeleafContent(
-                                                "browsers/list", mapOf(
-                                                    attrTo(Crumb.title),
-                                                    attrTo(Crumb.crumbs),
-                                                    "browsers" to browsers,
-                                                    "menu" to generateMenu()
-                                                )
-                                            )
-                                        )
-                                    }
-                                }
-
-                                route("{id}") {
-                                    crumb(Browser) {
-                                        get {
-                                            val url = call.request.uri;
-                                            val browser = attr(Crumb.entity).asViewModel(url)
-                                            when (call.request.contentType()) {
-                                                ContentType.Application.Json -> call.respond(browser)
-                                                else -> call.respond(
-                                                    ThymeleafContent(
-                                                        "browsers/view", mapOf(
-                                                            attrTo(Crumb.title),
-                                                            attrTo(Crumb.crumbs),
-                                                            "browser" to browser,
-                                                            "menu" to generateMenu()
-                                                        )
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+            route("") { crumb("Meerkat") {
+                get {
+                    call.respond(ThymeleafContent("index", mapOf(
+                        attrTo(Crumb.title),
+                        attrTo(Crumb.crumbs),
+                        "menu" to generateMenu()
+                    )))
                 }
-            }
+
+                with (ViewProject) { route(urlSegment) { crumb(name) {
+                    get {
+                        val url = call.request.uri;
+                        val projects = ProjectService.all(url)
+                        when (call.request.contentType()) {
+                            ContentType.Application.Json -> call.respond(projects)
+                            else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                                attrTo(Crumb.title),
+                                attrTo(Crumb.crumbs),
+                                "projects" to projects,
+                                "url" to call.request.uri,
+                                "menu" to generateMenu()
+                            )))
+                        }
+                    }
+
+                    route("{id}") { crumb(Project) {
+                        get {
+                            val url = call.request.uri;
+                            val project = attr(Crumb.entity).asViewModel(url)
+                            when (call.request.contentType()) {
+                                ContentType.Application.Json -> call.respond(project)
+                                else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                    attrTo(Crumb.title),
+                                    attrTo(Crumb.crumbs),
+                                    "project" to project,
+                                    "menu" to generateMenu()
+                                )))
+                            }
+                        }
+                    }
+                }}}}
+
+                with (ViewBrowser) { route(urlSegment) { crumb(name) {
+                    get {
+                        val url = call.request.uri;
+                        val browsers = BrowserService.all(url)
+                        when (call.request.contentType()) {
+                            ContentType.Application.Json -> call.respond(browsers)
+                            else -> call.respond(ThymeleafContent("browsers/list", mapOf(
+                                attrTo(Crumb.title),
+                                attrTo(Crumb.crumbs),
+                                "browsers" to browsers,
+                                "menu" to generateMenu()
+                            )))
+                        }
+                    }
+
+                    route("{id}") { crumb(Browser) {
+                        get {
+                            val url = call.request.uri;
+                            val browser = attr(Crumb.entity).asViewModel(url)
+                            when (call.request.contentType()) {
+                                ContentType.Application.Json -> call.respond(browser)
+                                else -> call.respond(ThymeleafContent("browsers/view", mapOf(
+                                    attrTo(Crumb.title),
+                                    attrTo(Crumb.crumbs),
+                                    "browser" to browser,
+                                    "menu" to generateMenu()
+                                )))
+                            }
+                        }
+                    }}
+                }}}
+            }}
         }
 
     }.start(wait = true)
@@ -178,8 +158,8 @@ fun main() {
 }
 
 val menu = Menu(listOf(
-    Section("General", listOf(Item("Home", "/", "mdi-account-circle"))),
-    Section("Setup", listOf(Item(Project, "mdi-square-edit-outline"), Item(Browser, "mdi-view-list"))),
+    Section("General", listOf(Item("Home", "/", "mdi-home"))),
+    Section("Setup", listOf(Item(ViewProject), Item(ViewBrowser))),
     Section("Runs", listOf())
 ))
 

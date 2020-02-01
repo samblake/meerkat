@@ -3,6 +3,7 @@ package com.github.samblake.meerkat.model
 abstract class ViewModel(val id: Int, val name: String, val description: String) {
 
     abstract val baseUrl: String
+    abstract val icon: String
 
     fun getInstanceUrl() = "${baseUrl}/${id}"
 
@@ -22,3 +23,5 @@ abstract class ViewModel(val id: Int, val name: String, val description: String)
     }
 
 }
+
+abstract class ViewType<T: ViewModel>(val name: String, val urlSegment: String, val icon: String)
