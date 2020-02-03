@@ -10,26 +10,26 @@
                     </p>
                 </header>
                 <div class="card-content">
-                    <div class="has-max-width is-aligned-center" th:text="${browser.description}"/>
+                    <div class="has-max-width is-aligned-center" th:text="${browser.description}" />
                     <hr>
                     <div class="field">
                         <label class="label">Client</label>
                         <div class="control is-clearfix">
-                            <input type="text" readonly class="input is-static" th:text="${browser.client}">
+                            <input type="text" readonly class="input is-static" th:value="${browser.client}"/>
                         </div>
                     </div>
                     <hr>
                     <div class="field">
                         <label class="label">Width</label>
                         <div class="control is-clearfix">
-                            <input type="text" readonly class="input is-static" th:text="${browser.width}">
+                            <input type="text" readonly class="input is-static" th:value="${browser.width}"/>
                         </div>
                     </div>
                     <hr>
                     <div class="field">
                         <label class="label">Height</label>
                         <div class="control is-clearfix">
-                            <input type="text" readonly class="input is-static" th:text="${browser.height}">
+                            <input type="text" readonly class="input is-static" th:value="${browser.height}"/>
                         </div>
                     </div>
                 </div>
