@@ -8,12 +8,10 @@ import com.github.samblake.meerkat.menu.Item
 import com.github.samblake.meerkat.menu.Menu
 import com.github.samblake.meerkat.menu.Section
 import com.github.samblake.meerkat.menu.ViewMenu
-import com.github.samblake.meerkat.model.Browser
-import com.github.samblake.meerkat.model.Project
-import com.github.samblake.meerkat.model.ViewBrowser
-import com.github.samblake.meerkat.model.ViewProject
+import com.github.samblake.meerkat.model.*
 import com.github.samblake.meerkat.services.BrowserService
 import com.github.samblake.meerkat.services.ProjectService
+import com.github.samblake.meerkat.services.ScenarioService
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
@@ -116,7 +114,42 @@ fun main() {
                                 )))
                             }
                         }
+
+                        with (ViewScenario) { route(urlSegment) { crumb(name) {
+                            get {
+                                val project = attr(Crumb.entity) as Project
+                                val url = call.request.uri;
+                                val scenarios = ScenarioService.all(project, url)
+                                when (call.request.contentType()) {
+                                    ContentType.Application.Json -> call.respond(scenarios)
+                                    else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                                        attrTo(Crumb.title),
+                                        attrTo(Crumb.crumbs),
+                                        "projects" to scenarios,
+                                        "url" to call.request.uri,
+                                        "menu" to generateMenu()
+                                    )))
+                                }
+                            }
+
+                            route("{id}") { crumb(Project) {
+                                get {
+                                    val url = call.request.uri;
+                                    val project = attr(Crumb.entity).asViewModel(url)
+                                    when (call.request.contentType()) {
+                                        ContentType.Application.Json -> call.respond(project)
+                                        else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                            attrTo(Crumb.title),
+                                            attrTo(Crumb.crumbs),
+                                            "project" to project,
+                                            "menu" to generateMenu()
+                                        )))
+                                    }
+                                }
+                            }
+                        }}}}
                     }
+
                 }}}}
 
                 with (ViewBrowser) { route(urlSegment) { crumb(name) {

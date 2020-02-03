@@ -1,55 +1,71 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
-      layout:decorate="~{layout}">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml" layout:decorate="~{layout}">
+
 <section class="section is-main-section" layout:fragment="content">
 
-    <div class="card-content">
+    <div class="table-wrapper">
         <div class="table-container">
             <table class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
+
                 <thead>
-                    <tr>
-                        <th class="checkbox-cell">
-                            <label class="b-checkbox checkbox">
-                                <input type="checkbox" value="false">
-                                <span class="check"></span>
-                                <span class="control-label"></span>
-                            </label>
-                        </th>
-                        <th></th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th></th>
-                    </tr>
+                <tr>
+                    <th class="checkbox-cell">
+                        <label class="b-checkbox checkbox">
+                            <input type="checkbox" value="false">
+                            <span class="check"></span>
+                            <span class="control-label"></span>
+                        </label>
+                    </th>
+                    <th></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
                 </thead>
 
                 <tbody>
-
                     <tr th:each="project: ${projects}">
-                        <td class="checkbox-cell">
-                            <label class="b-checkbox checkbox">
-                                <input type="checkbox" value="false">
-                                <span class="check"></span>
-                                <span class="control-label"></span>
-                            </label>
-                        </td>
-                        <td></td>
-                        <td th:text="${project.name}" />
-                        <td th:text="${project.description}" />
-                        <td>
-                            <div class="buttons is-right">
-                                <a th:href="${project.instanceUrl}">
-                                    <button class="button is-small is-primary" type="button">
-                                        <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    </button>
-                                </a>
-                                <button class="button is-small is-danger jb-modal" data-target="sample-modal" type="button">
-                                    <span class="icon"><i class="mdi mdi-trash-can"></i></span>
+                    <td class="checkbox-cell">
+                        <label class="b-checkbox checkbox">
+                            <input type="checkbox" value="false">
+                            <span class="check"></span>
+                            <span class="control-label"></span>
+                        </label>
+                    </td>
+                    <td></td>
+                    <td th:text="${project.name}" />
+                    <td th:text="${project.description}" />
+                    <td>
+                        <div class="buttons is-right">
+                            <a th:href="${project.instanceUrl}">
+                                <button class="button is-small is-primary" type="button">
+                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
                                 </button>
-                            </div>
-                        </td>
-                    </tr>
-
+                            </a>
+                        </div>
+                    </td>
+                </tr>
                 </tbody>
+
             </table>
+        </div>
+
+        <div class="level">
+            <div class="level-left"></div>
+            <div class="level-right">
+                <div class="level-item">
+                    <nav class="pagination">
+                        <a role="button" href="#" disabled="disabled" class="pagination-link pagination-previous">
+                            <span class="icon" aria-hidden="true"><i class="mdi mdi-chevron-left mdi-24px"></i></span>
+                        </a>
+                        <a role="button" href="#" disabled="disabled"  ]class="pagination-link pagination-next">
+                            <span class="icon" aria-hidden="true"><i class="mdi mdi-chevron-right mdi-24px"></i></span>
+                        </a>
+                        <ul class="pagination-list">
+                            <li><a role="button" href="#" aria-current="true" class="pagination-link is-current ">1</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
     </div>
 

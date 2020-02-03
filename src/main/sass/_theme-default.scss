@@ -13,13 +13,19 @@ $base-color: #2e323a;
 $base-color-light: rgba(24,28,33,0.06);
 
 /* General overrides */
-$primary: $turquoise;
+$primary: #B0C4DE;
 $body-background-color: #f8f8f8;
-$link: $blue;
-$link-visited: $purple;
+$link: $black;
+$link-visited: $black;
 $light-border: 1px solid $base-color-light;
 $hr-height: 1px;
 $info: #167df0;
+
+a {
+  font-weight: bold;
+}
+$header: #B0C4DE;
+
 
 /* NavBar: specifics */
 $navbar-input-color: $grey-darker;

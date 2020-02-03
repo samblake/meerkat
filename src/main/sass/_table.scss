@@ -2,6 +2,7 @@ table.table {
   thead {
     th {
       border-bottom-width: 1px;
+      background: $header;
     }
   }
 
@@ -57,12 +58,45 @@ table.table {
 
     .pagination-previous, .pagination-next, .pagination-link {
       border-color: $button-border-color;
-      color: $base-color;
+      color: $base-color
 
       &[disabled] {
         background-color: transparent;
       }
     }
+  }
+}
+
+
+
+.table-wrapper {
+  .table-container {
+    margin-bottom: 0;
+  }
+  .level {
+    padding: $default-padding * .5;
+    background: $white;
+  }
+}
+
+.pagination-previous, .pagination-next, .pagination-link {
+  min-width: $pagination-min-width;
+  max-width: $pagination-min-width;
+
+  &[disabled] {
+    cursor: default;
+  }
+}
+
+.pagination {
+  .pagination-previous {
+    order: 1
+  }
+  .pagination-list {
+    order: 2
+  }
+  .pagination-next {
+    order: 3
   }
 }
 

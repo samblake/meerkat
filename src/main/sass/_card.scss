@@ -37,6 +37,10 @@
     border-bottom: 1px solid $base-color-light;
   }
 
+  .card-header-title {
+    background: $header;
+  }
+
   .card-content {
     hr {
       margin-left: $card-content-padding * -1;
