@@ -26,7 +26,8 @@ class Browser(id: EntityID<Int>) : NamedEntity<ViewBrowser>(id) {
 
 }
 
-class ViewBrowser(id: Int, name: String, description: String, val client: Clients, val width: Int, val height: Int,
+class ViewBrowser(id: Int, name: String, description: String,  @Listing("Client") val client: Clients,
+        @Listing("Width") val width: Int, @Listing("Height")val height: Int,
         val additionalConfig: String?, override val baseUrl: String) : ViewModel(id, name, description) {
 
     companion object : ViewType<ViewBrowser>("Browsers", "browsers", "mdi-cellphone-link")  {

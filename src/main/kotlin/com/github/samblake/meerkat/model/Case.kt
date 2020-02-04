@@ -21,7 +21,8 @@ class Case(id: EntityID<Int>) : NamedEntity<ViewCase>(id) {
 
 }
 
-class ViewCase(id: Int, name: String, description: String, val path: String, val project: Project,
+class ViewCase(id: Int, name: String, description: String,
+        @Listing("Path") val path: String, val project: Project,
         override val baseUrl: String) : ViewModel(id, name, description) {
 
     companion object : ViewType<ViewCase>("Cases","cases", "mdi-bookmark-check") {

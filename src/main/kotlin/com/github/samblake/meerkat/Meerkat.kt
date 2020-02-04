@@ -90,10 +90,10 @@ fun main() {
                         val projects = ProjectService.all(url)
                         when (call.request.contentType()) {
                             ContentType.Application.Json -> call.respond(projects)
-                            else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                            else -> call.respond(ThymeleafContent("generic/list", mapOf(
                                 attrTo(Crumb.title),
                                 attrTo(Crumb.crumbs),
-                                "projects" to projects,
+                                "entities" to projects,
                                 "url" to call.request.uri,
                                 "menu" to generateMenu()
                             )))
@@ -106,10 +106,10 @@ fun main() {
                             val project = attr(Crumb.entity).asViewModel(url)
                             when (call.request.contentType()) {
                                 ContentType.Application.Json -> call.respond(project)
-                                else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                else -> call.respond(ThymeleafContent("generic/view", mapOf(
                                     attrTo(Crumb.title),
                                     attrTo(Crumb.crumbs),
-                                    "project" to project,
+                                    "entity" to project,
                                     "menu" to generateMenu()
                                 )))
                             }
@@ -122,26 +122,26 @@ fun main() {
                                 val scenarios = ScenarioService.all(project, url)
                                 when (call.request.contentType()) {
                                     ContentType.Application.Json -> call.respond(scenarios)
-                                    else -> call.respond(ThymeleafContent("projects/list", mapOf(
+                                    else -> call.respond(ThymeleafContent("generic/list", mapOf(
                                         attrTo(Crumb.title),
                                         attrTo(Crumb.crumbs),
-                                        "projects" to scenarios,
+                                        "entities" to scenarios,
                                         "url" to call.request.uri,
                                         "menu" to generateMenu()
                                     )))
                                 }
                             }
 
-                            route("{id}") { crumb(Project) {
+                            route("{id}") { crumb(Scenario) {
                                 get {
                                     val url = call.request.uri;
-                                    val project = attr(Crumb.entity).asViewModel(url)
+                                    val scenario = attr(Crumb.entity).asViewModel(url)
                                     when (call.request.contentType()) {
-                                        ContentType.Application.Json -> call.respond(project)
-                                        else -> call.respond(ThymeleafContent("projects/view", mapOf(
+                                        ContentType.Application.Json -> call.respond(scenario)
+                                        else -> call.respond(ThymeleafContent("generic/view", mapOf(
                                             attrTo(Crumb.title),
                                             attrTo(Crumb.crumbs),
-                                            "project" to project,
+                                            "entity" to scenario,
                                             "menu" to generateMenu()
                                         )))
                                     }
@@ -158,10 +158,10 @@ fun main() {
                         val browsers = BrowserService.all(url)
                         when (call.request.contentType()) {
                             ContentType.Application.Json -> call.respond(browsers)
-                            else -> call.respond(ThymeleafContent("browsers/list", mapOf(
+                            else -> call.respond(ThymeleafContent("generic/list", mapOf(
                                 attrTo(Crumb.title),
                                 attrTo(Crumb.crumbs),
-                                "browsers" to browsers,
+                                "entities" to browsers,
                                 "menu" to generateMenu()
                             )))
                         }
@@ -173,10 +173,10 @@ fun main() {
                             val browser = attr(Crumb.entity).asViewModel(url)
                             when (call.request.contentType()) {
                                 ContentType.Application.Json -> call.respond(browser)
-                                else -> call.respond(ThymeleafContent("browsers/view", mapOf(
+                                else -> call.respond(ThymeleafContent("generic/view", mapOf(
                                     attrTo(Crumb.title),
                                     attrTo(Crumb.crumbs),
-                                    "browser" to browser,
+                                    "entity" to browser,
                                     "menu" to generateMenu()
                                 )))
                             }

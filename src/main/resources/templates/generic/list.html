@@ -2,28 +2,31 @@
 
 <section class="section is-main-section" layout:fragment="content">
 
-    <div class="table-wrapper">
+    <div th:if="${not entities.empty}" class="table-wrapper">
         <div class="table-container">
-            <table class="table is-fullwidth is-striped is-hoverable is-sortable is-fullwidth">
+            <table class="table is-fullwidth is-striped is-sortable is-fullwidth">
 
                 <thead>
-                <tr>
-                    <th class="checkbox-cell">
-                        <label class="b-checkbox checkbox">
-                            <input type="checkbox" value="false">
-                            <span class="check"></span>
-                            <span class="control-label"></span>
-                        </label>
-                    </th>
-                    <th></th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th></th>
-                </tr>
+                    <tr>
+                        <th class="checkbox-cell">
+                            <label class="b-checkbox checkbox">
+                                <input type="checkbox" value="false">
+                                <span class="check"></span>
+                                <span class="control-label"></span>
+                            </label>
+                        </th>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th:block th:each="listing : ${entities[0].listings}">
+                            <th th:text="${listing.key}" />
+                        </th:block>
+                        <th></th>
+                    </tr>
                 </thead>
 
                 <tbody>
-                    <tr th:each="project: ${projects}">
+                    <tr th:each="entity: ${entities}">
                     <td class="checkbox-cell">
                         <label class="b-checkbox checkbox">
                             <input type="checkbox" value="false">
@@ -32,11 +35,14 @@
                         </label>
                     </td>
                     <td></td>
-                    <td th:text="${project.name}" />
-                    <td th:text="${project.description}" />
+                    <td th:text="${entity.name}" />
+                    <td th:text="${entity.description}" />
+                    <th:block th:each="listing : ${entity.listings}">
+                        <td th:text="${listing.value}" />
+                    </th:block>
                     <td>
                         <div class="buttons is-right">
-                            <a th:href="${project.instanceUrl}">
+                            <a th:href="${entity.instanceUrl}">
                                 <button class="button is-small is-primary" type="button">
                                     <span class="icon"><i class="mdi mdi-eye"></i></span>
                                 </button>

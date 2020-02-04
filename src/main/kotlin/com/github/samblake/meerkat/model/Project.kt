@@ -22,7 +22,7 @@ class Project(id: EntityID<Int>) : NamedEntity<ViewProject>(id) {
 
 }
 
-class ViewProject(id: Int, name: String, description: String, val base: String,
+class ViewProject(id: Int, name: String, description: String, @Listing("Base") val base: String,
         override val baseUrl: String) : ViewModel(id, name, description) {
 
     companion object : ViewType<ViewProject>("Projects","projects", "mdi-clipboard-outline") {
