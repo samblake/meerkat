@@ -1,6 +1,8 @@
 package com.github.samblake.meerkat
 
-import com.github.samblake.meerkat.crumbs.Crumb
+import com.github.samblake.meerkat.crumbs.Crumb.crumbs
+import com.github.samblake.meerkat.crumbs.Crumb.entity
+import com.github.samblake.meerkat.crumbs.Crumb.title
 import com.github.samblake.meerkat.crumbs.crumb
 import com.github.samblake.meerkat.edge.Configuration
 import com.github.samblake.meerkat.edge.Database
@@ -78,73 +80,33 @@ fun main() {
             route("") { crumb("Meerkat") {
                 get {
                     call.respond(ThymeleafContent("index", mapOf(
-                        attrTo(Crumb.title),
-                        attrTo(Crumb.crumbs),
-                        "menu" to generateMenu()
+                        attrTo(title), attrTo(crumbs), "menu" to generateMenu()
                     )))
                 }
 
                 with (ViewProject) { route(urlSegment) { crumb(name) {
                     get {
-                        val url = call.request.uri;
-                        val projects = ProjectService.all(url)
-                        when (call.request.contentType()) {
-                            ContentType.Application.Json -> call.respond(projects)
-                            else -> call.respond(ThymeleafContent("generic/list", mapOf(
-                                attrTo(Crumb.title),
-                                attrTo(Crumb.crumbs),
-                                "entities" to projects,
-                                "url" to call.request.uri,
-                                "menu" to generateMenu()
-                            )))
-                        }
+                        val projects = ProjectService.all(url())
+                        listCall(projects)
                     }
 
                     route("{id}") { crumb(Project) {
                         get {
-                            val url = call.request.uri;
-                            val project = attr(Crumb.entity).asViewModel(url)
-                            when (call.request.contentType()) {
-                                ContentType.Application.Json -> call.respond(project)
-                                else -> call.respond(ThymeleafContent("generic/view", mapOf(
-                                    attrTo(Crumb.title),
-                                    attrTo(Crumb.crumbs),
-                                    "entity" to project,
-                                    "menu" to generateMenu()
-                                )))
-                            }
+                            val project = attr(entity).asViewModel(url())
+                            viewCall(project)
                         }
 
                         with (ViewScenario) { route(urlSegment) { crumb(name) {
                             get {
-                                val project = attr(Crumb.entity) as Project
-                                val url = call.request.uri;
-                                val scenarios = ScenarioService.all(project, url)
-                                when (call.request.contentType()) {
-                                    ContentType.Application.Json -> call.respond(scenarios)
-                                    else -> call.respond(ThymeleafContent("generic/list", mapOf(
-                                        attrTo(Crumb.title),
-                                        attrTo(Crumb.crumbs),
-                                        "entities" to scenarios,
-                                        "url" to call.request.uri,
-                                        "menu" to generateMenu()
-                                    )))
-                                }
+                                val project = attr(entity) as Project
+                                val scenarios = ScenarioService.all(project, url())
+                                listCall(scenarios)
                             }
 
                             route("{id}") { crumb(Scenario) {
                                 get {
-                                    val url = call.request.uri;
-                                    val scenario = attr(Crumb.entity).asViewModel(url)
-                                    when (call.request.contentType()) {
-                                        ContentType.Application.Json -> call.respond(scenario)
-                                        else -> call.respond(ThymeleafContent("generic/view", mapOf(
-                                            attrTo(Crumb.title),
-                                            attrTo(Crumb.crumbs),
-                                            "entity" to scenario,
-                                            "menu" to generateMenu()
-                                        )))
-                                    }
+                                    val scenario = attr(entity).asViewModel(url())
+                                    viewCall(scenario)
                                 }
                             }
                         }}}}
@@ -154,32 +116,14 @@ fun main() {
 
                 with (ViewBrowser) { route(urlSegment) { crumb(name) {
                     get {
-                        val url = call.request.uri;
-                        val browsers = BrowserService.all(url)
-                        when (call.request.contentType()) {
-                            ContentType.Application.Json -> call.respond(browsers)
-                            else -> call.respond(ThymeleafContent("generic/list", mapOf(
-                                attrTo(Crumb.title),
-                                attrTo(Crumb.crumbs),
-                                "entities" to browsers,
-                                "menu" to generateMenu()
-                            )))
-                        }
+                        val browsers = BrowserService.all(url())
+                        listCall(browsers)
                     }
 
                     route("{id}") { crumb(Browser) {
                         get {
-                            val url = call.request.uri;
-                            val browser = attr(Crumb.entity).asViewModel(url)
-                            when (call.request.contentType()) {
-                                ContentType.Application.Json -> call.respond(browser)
-                                else -> call.respond(ThymeleafContent("generic/view", mapOf(
-                                    attrTo(Crumb.title),
-                                    attrTo(Crumb.crumbs),
-                                    "entity" to browser,
-                                    "menu" to generateMenu()
-                                )))
-                            }
+                            val browser = attr(entity).asViewModel(url())
+                            viewCall(browser)
                         }
                     }}
                 }}}
@@ -190,6 +134,40 @@ fun main() {
 
 }
 
+private fun PipelineContext<Unit, ApplicationCall>.url() = call.request.uri
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.viewCall(browser: Any) {
+    when (call.request.contentType()) {
+        ContentType.Application.Json -> call.respond(browser)
+        else -> call.respond(ThymeleafContent("generic/view", viewMap(browser)))
+    }
+}
+
+private suspend fun PipelineContext<Unit, ApplicationCall>.listCall(projects: List<Any>) {
+    when (call.request.contentType()) {
+        ContentType.Application.Json -> call.respond(projects)
+        else -> call.respond(ThymeleafContent("generic/list", listMap(projects)))
+    }
+}
+
+private fun PipelineContext<Unit, ApplicationCall>.listMap(entities: List<Any>): Map<String, Any> {
+    return mapOf(
+        attrTo(title),
+        attrTo(crumbs),
+        "entities" to entities,
+        "menu" to generateMenu()
+    )
+}
+
+private fun PipelineContext<Unit, ApplicationCall>.viewMap(entity: Any): Map<String, Any> {
+    return mapOf(
+        attrTo(title),
+        attrTo(crumbs),
+        "entity" to entity,
+        "menu" to generateMenu()
+    )
+}
+
 val menu = Menu(listOf(
     Section("General", listOf(Item("Home", "/", "mdi-home"))),
     Section("Setup", listOf(Item(ViewProject), Item(ViewBrowser))),
@@ -197,7 +175,7 @@ val menu = Menu(listOf(
 ))
 
 private fun PipelineContext<Unit, ApplicationCall>.generateMenu(): ViewMenu {
-    val crumbs = attr(Crumb.crumbs)
+    val crumbs = attr(crumbs)
     val selectedItem = menu.findSelectedItem(crumbs)
     return ViewMenu(menu, selectedItem)
 }

@@ -43,6 +43,7 @@ fun Route.crumb(name: String, callback: Route.() -> Unit): Route {
     return routeWithCrumb
 }
 
+@ContextDsl
 fun <T:NamedEntity<out Any>>Route.crumb(entityClass: NamedEntityClass<T>, callback: Route.() -> Unit): Route {
 
     val routeWithCrumb = this.createChild(object : RouteSelector(1.0) {
