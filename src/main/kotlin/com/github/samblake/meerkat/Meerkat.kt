@@ -150,23 +150,19 @@ private suspend fun PipelineContext<Unit, ApplicationCall>.listCall(projects: Li
     }
 }
 
-private fun PipelineContext<Unit, ApplicationCall>.listMap(entities: List<Any>): Map<String, Any> {
-    return mapOf(
-        attrTo(title),
-        attrTo(crumbs),
-        "entities" to entities,
-        "menu" to generateMenu()
-    )
-}
+private fun PipelineContext<Unit, ApplicationCall>.listMap(entities: List<Any>): Map<String, Any> = mapOf(
+    attrTo(title),
+    attrTo(crumbs),
+    "entities" to entities,
+    "menu" to generateMenu()
+)
 
-private fun PipelineContext<Unit, ApplicationCall>.viewMap(entity: Any): Map<String, Any> {
-    return mapOf(
-        attrTo(title),
-        attrTo(crumbs),
-        "entity" to entity,
-        "menu" to generateMenu()
-    )
-}
+private fun PipelineContext<Unit, ApplicationCall>.viewMap(entity: Any): Map<String, Any> = mapOf(
+    attrTo(title),
+    attrTo(crumbs),
+    "entity" to entity,
+    "menu" to generateMenu()
+)
 
 val menu = Menu(listOf(
     Section("General", listOf(Item("Home", "/", "mdi-home"))),
